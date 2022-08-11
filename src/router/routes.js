@@ -13,7 +13,7 @@ const routes = [
     ],
   },
   {
-    path: "/person/manage",
+    path: "/person",
     name: "ManagePerson",
     component: () => import("layouts/person/ManageLayout.vue"),
     children: [
