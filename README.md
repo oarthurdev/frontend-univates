@@ -1,41 +1,28 @@
-# Quasar App (quasar-project)
+# Frontend Univates
 
-A Quasar Project
+Projeto feito em Quasar e Vue.js para o processo seletivo da Univates.
 
-## Install the dependencies
+## Instalação
+
+Primeiro clone o projeto e acesse a pasta dele
+
 ```bash
-yarn
-# or
-npm install
+  git clone https://github.com/oarthurdev/frontend-univates
+  cd frontend-univates
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+Após isso instale as dependências
+
 ```bash
-quasar dev
+  npm install
 ```
 
+Inicie o projeto em development mode
 
-### Lint the files
 ```bash
-yarn lint
-# or
-npm run lint
+  quasar dev
 ```
 
+## Autores
 
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+- [@oarthurdev](https://www.github.com/oarthurdev)
