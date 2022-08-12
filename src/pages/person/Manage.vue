@@ -1,9 +1,9 @@
 <template>
   <div class="q-pa-md">
-    <q-btn dense flat color="grey" @click="alert = true" icon="add"
+    <q-btn dense flat color="grey" @click="newPerson = true" icon="add"
       >New Person</q-btn
     >
-    <q-dialog v-model="alert">
+    <q-dialog v-model="newPerson">
       <q-card>
         <q-card-section>
           <div class="text-h6">Add new Person</div>
@@ -27,6 +27,7 @@
                 filled
                 v-model="birth_date"
                 label="Your birth date"
+                v-mask="['##/##/####']"
                 lazy-rules
                 :rules="[
                   (val) => (val && val.length > 0) || 'Please type something',
@@ -44,7 +45,12 @@
                 ]"
               />
 
-              <q-select filled v-model="sex" :options="options" label="Sex" />
+              <q-select
+                filled
+                v-model="sex"
+                :options="options"
+                label="Sex"
+              /><br />
 
               <q-input
                 filled
@@ -101,7 +107,10 @@
             round
             flat
             color="grey"
-            @click="editRow(props)"
+            @click="
+              update = true;
+              editRow(props);
+            "
             icon="edit"
           ></q-btn>
           <q-btn
@@ -136,6 +145,7 @@ import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
 import { mask } from "vue-the-mask";
+import { data } from "browserslist";
 
 const columns = [
   {
@@ -168,7 +178,6 @@ export default {
   directives: { mask },
   setup() {
     const $q = useQuasar();
-
     const name = ref(null);
     const birth_date = ref(null);
     const cpf = ref(null);
@@ -179,6 +188,9 @@ export default {
     const rows = ref([]);
     const filter = ref("");
     const loading = ref(false);
+
+    const update = ref(false);
+
     const pagination = ref({
       sortBy: "desc",
       descending: false,
@@ -194,43 +206,73 @@ export default {
     });
 
     function onSubmit() {
-      api
-        .post("persons", {
-          name: name.value,
-          birth_date: birth_date.value,
-          cpf: cpf.value,
-          sex: sex.value,
-          phone: phone.value,
-          email: email.value,
-        })
-        .then(function (response) {
-          if (response.data.status == "success") {
-            $q.notify({
-              type: "positive",
-              message: "Person registered sucessfully.",
-            });
-          } else {
-            $q.notify({
-              type: "negative",
-              message: "Oops, something went wrong, try again.",
-            });
-          }
-        });
+      if (update.value == true) {
+        api
+          .put("persons", {
+            name: name.value,
+            birth_date: birth_date.value,
+            cpf: cpf.value,
+            sex: sex.value,
+            phone: phone.value,
+            email: email.value,
+          })
+          .then(function (response) {
+            if (response.data.status == "success") {
+              $q.notify({
+                type: "positive",
+                message: "Person updated sucessfully.",
+              });
+
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              $q.notify({
+                type: "negative",
+                message: "Oops, something went wrong, try again.",
+              });
+            }
+          });
+      } else {
+        api
+          .post("persons", {
+            name: name.value,
+            birth_date: birth_date.value,
+            cpf: cpf.value,
+            sex: sex.value,
+            phone: phone.value,
+            email: email.value,
+          })
+          .then(function (response) {
+            if (response.data.status == "success") {
+              $q.notify({
+                type: "positive",
+                message: "Person registered sucessfully.",
+              });
+
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              $q.notify({
+                type: "negative",
+                message: "Oops, something went wrong, try again.",
+              });
+            }
+          });
+      }
     }
 
     function editRow(props) {
-      console.log(props.row);
-      fd.noti();
-      // do something
-      fd.noti = q$.notify({
-        type: "info",
-        textColor: "grey-10",
-        multiLine: true,
-        message: `I'll edit row data => ${JSON.stringify(props.row.id)
-          .split(",")
-          .join(", ")}`,
-        timeout: 2000,
-      });
+      console.log(update.value);
+      name.value = props.row.name;
+      birth_date.value = props.row.birth_date;
+      cpf.value = props.row.cpf;
+      sex.value = props.row.sex;
+      phone.value = props.row.phone;
+      email.value = props.row.email;
+
+      this.newPerson = true;
     }
 
     function deleteRow(props) {
@@ -345,7 +387,7 @@ export default {
     });
 
     return {
-      alert: ref(false),
+      newPerson: ref(false),
       address: ref(""),
       filter,
       loading,
@@ -364,6 +406,7 @@ export default {
       onSubmit,
       onReset,
       options: ["Male", "Female"],
+      update,
     };
   },
 };
