@@ -23,6 +23,6 @@ Inicie o projeto em development mode
   quasar dev
 ```
 
-## Autores
+## Autor
 
 - [@oarthurdev](https://www.github.com/oarthurdev)
