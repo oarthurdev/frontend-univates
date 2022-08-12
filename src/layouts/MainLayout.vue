@@ -12,7 +12,9 @@
         />
 
         <q-toolbar-title>
-          <router-link to="/dashboard"> Univates </router-link>
+          <router-link style="color: white !important" to="/dashboard">
+            Univates
+          </router-link>
         </q-toolbar-title>
 
         <q-item clickable @click="logout">
@@ -26,12 +28,6 @@
         </q-item>
       </q-toolbar>
     </q-header>
-
-    <!-- <q-footer elevated>
-      <q-toolbar>
-        <q-toolbar-title align="right"><font size="4pt">Hookah Finder - Copyright &#9400; 2021</font></q-toolbar-title>
-      </q-toolbar>
-    </q-footer> -->
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-toggle

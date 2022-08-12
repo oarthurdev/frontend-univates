@@ -195,7 +195,7 @@ export default {
       sortBy: "desc",
       descending: false,
       page: 1,
-      rowsPerPage: 3,
+      rowsPerPage: 5,
       rowsNumber: 10,
     });
 
@@ -206,65 +206,55 @@ export default {
     });
 
     function onSubmit() {
+      var objPerson = {
+        name: name.value,
+        birth_date: birth_date.value,
+        cpf: cpf.value,
+        sex: sex.value,
+        phone: phone.value,
+        email: email.value,
+      };
+
       if (update.value == true) {
-        api
-          .put("persons", {
-            name: name.value,
-            birth_date: birth_date.value,
-            cpf: cpf.value,
-            sex: sex.value,
-            phone: phone.value,
-            email: email.value,
-          })
-          .then(function (response) {
-            if (response.data.status == "success") {
-              $q.notify({
-                type: "positive",
-                message: "Person updated sucessfully.",
-              });
+        api.put("persons", objPerson).then(function (response) {
+          if (response.data.status == "success") {
+            $q.notify({
+              type: "positive",
+              message: "Person updated sucessfully.",
+            });
 
-              setTimeout(() => {
-                window.location.reload();
-              }, 1000);
-            } else {
-              $q.notify({
-                type: "negative",
-                message: "Oops, something went wrong, try again.",
-              });
-            }
-          });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            $q.notify({
+              type: "negative",
+              message: "Oops, something went wrong, try again.",
+            });
+          }
+        });
       } else {
-        api
-          .post("persons", {
-            name: name.value,
-            birth_date: birth_date.value,
-            cpf: cpf.value,
-            sex: sex.value,
-            phone: phone.value,
-            email: email.value,
-          })
-          .then(function (response) {
-            if (response.data.status == "success") {
-              $q.notify({
-                type: "positive",
-                message: "Person registered sucessfully.",
-              });
+        api.post("persons", objPerson).then(function (response) {
+          if (response.data.status == "success") {
+            $q.notify({
+              type: "positive",
+              message: "Person registered sucessfully.",
+            });
 
-              setTimeout(() => {
-                window.location.reload();
-              }, 1000);
-            } else {
-              $q.notify({
-                type: "negative",
-                message: "Oops, something went wrong, try again.",
-              });
-            }
-          });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            $q.notify({
+              type: "negative",
+              message: "Oops, something went wrong, try again.",
+            });
+          }
+        });
       }
     }
 
     function editRow(props) {
-      console.log(update.value);
       name.value = props.row.name;
       birth_date.value = props.row.birth_date;
       cpf.value = props.row.cpf;
