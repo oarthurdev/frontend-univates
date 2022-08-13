@@ -23,7 +23,7 @@ Inicie o projeto em development mode
   quasar dev
 ```
 
-## Demo
+## Preview
 
 ![Frontend Univates](/assets/univates-demo.png)
 
