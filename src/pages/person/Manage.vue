@@ -1,12 +1,21 @@
 <template>
   <div class="q-pa-md">
-    <q-btn dense flat color="grey" @click="newPerson = true" icon="add"
+    <q-btn
+      dense
+      flat
+      color="grey"
+      @click="
+        newPerson = true;
+        updateOrAdd = 'Add new';
+        limpaCampos();
+      "
+      icon="add"
       >New Person</q-btn
     >
     <q-dialog v-model="newPerson">
-      <q-card>
+      <q-card style="width: 500px">
         <q-card-section>
-          <div class="text-h6">Add new Person</div>
+          <div class="text-h6">{{ updateOrAdd }} Person</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -15,7 +24,7 @@
               <q-input
                 filled
                 v-model="name"
-                label="Your name"
+                label="Name"
                 hint="Name and surname"
                 lazy-rules
                 :rules="[
@@ -26,18 +35,35 @@
               <q-input
                 filled
                 v-model="birth_date"
-                label="Your birth date"
-                v-mask="['##/##/####']"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              />
-
+                mask="date"
+                :rules="['date']"
+                label="Birth Date"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="birth_date">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
               <q-input
                 filled
                 v-model="cpf"
-                label="Your CPF"
+                label="CPF"
                 lazy-rules
                 v-mask="['###.###.###-##']"
                 :rules="[
@@ -55,7 +81,7 @@
               <q-input
                 filled
                 v-model="phone"
-                label="Your phone"
+                label="Phone"
                 lazy-rules
                 v-mask="['(##) ####-####', '(##) #####-####']"
                 :rules="[
@@ -66,7 +92,7 @@
               <q-input
                 filled
                 v-model="email"
-                label="Your email"
+                label="Email"
                 lazy-rules
                 type="email"
                 :rules="[
@@ -118,9 +144,28 @@
             round
             flat
             color="grey"
-            @click="deleteRow(props)"
+            @click="confirm = true"
             icon="delete"
           ></q-btn>
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="delete" color="primary" text-color="white" />
+                <span class="q-ml-sm">You want to delete this person?</span>
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn flat label="Cancel" v-close-popup />
+                <q-btn
+                  @click="deleteRow(props)"
+                  flat
+                  label="Yes"
+                  color="negative"
+                  v-close-popup
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
         </q-td>
       </template>
       <template #top-right>
@@ -145,7 +190,6 @@ import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
 import { mask } from "vue-the-mask";
-import { data } from "browserslist";
 
 const columns = [
   {
@@ -205,6 +249,15 @@ export default {
       });
     });
 
+    function limpaCampos() {
+      name.value = null;
+      birth_date.value = null;
+      cpf.value = null;
+      sex.value = null;
+      phone.value = null;
+      email.value = null;
+    }
+
     function onSubmit() {
       var objPerson = {
         name: name.value,
@@ -216,45 +269,52 @@ export default {
       };
 
       if (update.value == true) {
-        api.put("persons", objPerson).then(function (response) {
-          if (response.data.status == "success") {
-            $q.notify({
-              type: "positive",
-              message: "Person updated sucessfully.",
-            });
+        api
+          .put("persons", objPerson)
+          .then(function (response) {
+            if (response.data.status == "success") {
+              $q.notify({
+                type: "positive",
+                message: "Person updated sucessfully.",
+              });
 
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          } else {
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }
+          })
+          .catch((e) => {
             $q.notify({
               type: "negative",
               message: "Oops, something went wrong, try again.",
             });
-          }
-        });
+          });
       } else {
-        api.post("persons", objPerson).then(function (response) {
-          if (response.data.status == "success") {
-            $q.notify({
-              type: "positive",
-              message: "Person registered sucessfully.",
-            });
+        api
+          .post("persons", objPerson)
+          .then(function (response) {
+            if (response.data.status == "success") {
+              $q.notify({
+                type: "positive",
+                message: "Person registered sucessfully.",
+              });
 
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          } else {
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }
+          })
+          .catch((e) => {
             $q.notify({
               type: "negative",
               message: "Oops, something went wrong, try again.",
             });
-          }
-        });
+          });
       }
     }
 
     function editRow(props) {
+      this.updateOrAdd = "Update a";
       name.value = props.row.name;
       birth_date.value = props.row.birth_date;
       cpf.value = props.row.cpf;
@@ -275,7 +335,6 @@ export default {
             timeout: 2000,
           });
         }
-
         setTimeout(() => {
           window.location.reload();
         }, 3000);
@@ -379,6 +438,7 @@ export default {
     return {
       newPerson: ref(false),
       address: ref(""),
+      updateOrAdd: "Add new",
       filter,
       loading,
       pagination,
@@ -388,7 +448,6 @@ export default {
       deleteRow,
       onRequest,
       name,
-      birth_date,
       cpf,
       sex,
       phone,
@@ -397,6 +456,9 @@ export default {
       onReset,
       options: ["Male", "Female"],
       update,
+      limpaCampos,
+      birth_date,
+      confirm: ref(false),
     };
   },
 };
