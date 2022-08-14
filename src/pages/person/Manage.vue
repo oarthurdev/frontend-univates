@@ -35,8 +35,7 @@
               <q-input
                 filled
                 v-model="birth_date"
-                mask="date"
-                :rules="['date']"
+                v-mask="['##/##/####']"
                 label="Birth Date"
               >
                 <template v-slot:append>
@@ -46,7 +45,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="birth_date">
+                      <q-date mask="MM-DD-YYYY" v-model="birth_date">
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -454,7 +453,7 @@ export default {
       email,
       onSubmit,
       onReset,
-      options: ["Male", "Female"],
+      options: ["Male", "Female", "Non-Binary"],
       update,
       limpaCampos,
       birth_date,
