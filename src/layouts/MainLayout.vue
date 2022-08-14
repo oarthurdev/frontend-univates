@@ -46,12 +46,6 @@
             :to="submenu.link"
             class="text-grey-8"
           >
-            <LoungeMenu
-              :link="submenu.link"
-              :title="submenu.title"
-              :caption="submenu.caption"
-              :icon="submenu.icon"
-            />
           </router-link>
         </q-expansion-item>
       </q-list>
@@ -73,7 +67,6 @@
 
 <script>
 import GeralMenu from "src/components/menu/GeralMenu.vue";
-import LoungeMenu from "src/components/menu/LoungeMenu.vue";
 import geralMenu from "src/components/menu/js/geral.js";
 import menu from "src/components/menu/js/menu.js";
 
@@ -81,7 +74,6 @@ export default {
   name: "MainLayout",
   components: {
     GeralMenu,
-    LoungeMenu,
   },
   data() {
     return {
