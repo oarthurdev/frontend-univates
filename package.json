@@ -1,7 +1,7 @@
 {
-  "name": "quasar-project",
+  "name": "frontend-univates",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "Frontend do Processo Seletivo da Univates",
   "productName": "Univates",
   "author": "Arthur Wagenknecht <arthur.wagenknecht@itmapps.com.br>",
   "private": true,

@@ -89,23 +89,4 @@ export default {
 a {
   text-decoration: none !important;
 }
-.toggleDarkMode {
-  float: right;
-}
-.user-image {
-  width: 35px;
-  height: 35px;
-  border-radius: 50px;
-  margin-right: 10px;
-}
-
-.user-image-dropdown {
-  width: 105px;
-  height: 105px;
-  border-radius: 50%;
-}
-
-#dropdownUser {
-  margin-right: -15px;
-}
 </style>
